@@ -1,4 +1,5 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QVBoxLayout, QWidget, QDialog, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QVBoxLayout, QWidget, QDialog, QMessageBox, \
+    QHBoxLayout
 from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtGui import QPixmap, QFont
 
@@ -42,14 +43,23 @@ class View(QMainWindow):
         self.text_label.setFont(QFont('Arial', 40))
         self.text_label.setAlignment(Qt.AlignCenter)
 
-        self.image_label = QLabel("Another Window % d" % randint(0, 100))
+        self.image_label = QLabel()
+        self.middle_label = QLabel()
+        self.right_image_lebel = QLabel()
         # pixmap = QPixmap('resources/ferris.png')
         # self.image_label.setPixmap(pixmap)
         # self.image_label.setScaledContents(True)
 
+        image_layout = QHBoxLayout()
+        image_widget = QWidget()
+        image_widget.setLayout(image_layout)
+        image_layout.addWidget(self.image_label)
+        image_layout.addWidget(self.middle_label)
+        image_layout.addWidget(self.right_image_lebel)
+
         dlgLayout = QVBoxLayout()
         dlgLayout.addWidget(self.text_label)
-        dlgLayout.addWidget(self.image_label)
+        dlgLayout.addWidget(image_widget)
         # self.setLayout(dlgLayout)
 
         self._centralWidget = QWidget(self)
@@ -66,7 +76,7 @@ class View(QMainWindow):
         self.show()
 
     def stop_popping(self):
-        self.done(0)
+        pass
 
     def update_label(self):
         current_time = datetime.now().time().strftime("%H:%M:%S")
@@ -76,17 +86,27 @@ class View(QMainWindow):
         current_time = datetime.now().time().strftime("%H:%M:%S")
         self.text_label.setText(f"It's {current_time} " + self.text)
         pixmap = QPixmap('resources/spank1.jpg')
-        self.image_label.setPixmap(pixmap)
-        self._centralWidget.resize(pixmap.width(), pixmap.height())
+        self.image_label.setAlignment(Qt.AlignLeft)
+        self.image_label.setPixmap(pixmap.scaled(300, 300, Qt.KeepAspectRatio))
 
-    def closeEvent(self, event):  # 函数名固定不可变
+        right_image = QPixmap('resources/spank2.jpeg')
+        self.right_image_lebel.setAlignment(Qt.AlignRight)
+        self.right_image_lebel.setPixmap(right_image.scaled(300, 300, Qt.KeepAspectRatio))
+
+        middle_image = QPixmap('resources/spank3.jpeg')
+        self.middle_label.setAlignment(Qt.AlignCenter)
+        self.middle_label.setPixmap(middle_image.scaled(300, 300, Qt.KeepAspectRatio))
+        # right_image.scaledToWidth(200)
+        # right_image.scaledToHeight(200)
+        # self._centralWidget.resize(pixmap.width() + right_image.width(), pixmap.height() + right_image.height())
+
+    def closeEvent(self, event):
         reply = QMessageBox.question(self, u'警告', u'确认退出?', QMessageBox.Yes,
                                      QMessageBox.No)
-        # QtWidgets.QMessageBox.question(self,u'弹窗名',u'弹窗内容',选项1,选项2)
         if reply == QMessageBox.Yes:
-            event.accept()  # 关闭窗口
+            event.accept()
         else:
-            event.ignore()  # 忽视点击X事件
+            event.ignore()
 
 
 class Model(object):
@@ -133,7 +153,7 @@ if __name__ == '__main__':
     v = View("Your mom ask you to go to bed")
     v.set_invisable()
     # v.start_popping()
-    model = Model(time(20), time(23))
+    model = Model(time(20), time(0))
     ctrl = Controller(view=v, model=model)
     ctrl.run()
     app.exec()
