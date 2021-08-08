@@ -1,7 +1,5 @@
 import argparse
-import sys
 from datetime import datetime, time
-from random import randint
 
 import keyboard
 
@@ -36,7 +34,6 @@ class Controller(object):
 
     def on_press(self, key):
         if self.model.is_time_to_notify():
-            print(f"press {key}")
             self.view.print_msg_to_stdout()
             self.model.set_last_notified_time(datetime.now())
         else:
@@ -44,7 +41,9 @@ class Controller(object):
 
 
 class View(object):
-    """Dialog."""
+    """
+    View
+    """
 
     def __init__(self, text, parent=None):
         """Initializer."""
@@ -72,22 +71,27 @@ class Model(object):
     def set_interval(self, interval):
         self.interval = interval
 
-    def get_text(self):
-        now = datetime.now()
-        return f"It's {now}, " + self.text
-
     def is_sleep_time(self):
+        """
+        Check if now is in the specific range
+        """
         now = datetime.now()
         return self.is_between(now.time(), self.start_time, self.end_time)
 
     def is_time_to_notify(self):
+        """
+        Check if it's time to notify
+        """
         return (
-            self.is_sleep_time
+            self.is_sleep_time()
             and (datetime.now() - self.last_notified_time).seconds > self.interval
         )
 
     @staticmethod
     def is_between(now, start, end):
+        """
+        Check if now is between start and end
+        """
         if start <= end:
             return start <= now < end
         else:  # over midnight e.g., 23:30-04:15
@@ -114,16 +118,25 @@ if __name__ == "__main__":
         default=7,
     )
     parser.add_argument(
+        "-i",
+        "--interval",
+        dest="interval",
+        type=ascii,
+        help="The interval seconds between two notification",
+        default=10,
+    )
+    parser.add_argument(
         "-c",
         "--content",
         dest="content",
         type=ascii,
-        help="The content of notification",
+        help='The content of notification, for example: "Your mom ask you to go to bed"',
         default="Your mom ask you to go to bed",
     )
     args = parser.parse_args()
     view = View(args.content)
-    model = Model(time(args.go_to_bed_hour), time(args.wake_up_hour))
+    print(f"start_time: {args.go_to_bed_hour}, end_time: {args.wake_up_hour}")
+    model = Model(time(args.go_to_bed_hour), time(args.wake_up_hour), args.interval)
     ctrl = Controller(view=view, model=model)
     ctrl.run()
     keyboard.wait()
