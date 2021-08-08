@@ -26,9 +26,10 @@
       git clone git@github.com:ramsayleung/gtb.git
     #+end_src
 ** Usage
+   Running in the background on Linux
    #+begin_src sh
      cd gtb
-     sudo python main.py
+     sudo python main.py&
    #+end_src
 
    Important:
