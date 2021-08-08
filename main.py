@@ -1,6 +1,7 @@
 import sys
 from datetime import datetime, time
 from random import randint
+
 import keyboard
 
 
@@ -11,17 +12,21 @@ class Controller(object):
         pass
 
     def run(self):
+        print("start run")
         keyboard.on_press(self.on_press)
-        keyboard.on_press_key("q", self.stop)
+        keyboard.add_hotkey("ctrl+q", self.stop, args=["ctrl+q"])
 
     def stop(self, key):
-        print(f"press {key} to stop")
+        print("stop notify")
         self.model.set_interval(100000000)
 
     def on_press(self, key):
         if self.model.is_time_to_notify():
             print(f"press {key}")
             self.view.print_msg_to_stdout()
+            self.model.set_last_notified_time(datetime.now())
+        else:
+            pass
 
 
 class View(object):
@@ -73,6 +78,7 @@ class Model(object):
 
 if __name__ == "__main__":
     view = View("Your mom ask you to go to bed")
-    model = Model(time(20), time(0))
+    model = Model(time(14), time(0))
     ctrl = Controller(view=view, model=model)
     ctrl.run()
+    keyboard.wait()
