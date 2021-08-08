@@ -1,8 +1,22 @@
+import argparse
 import sys
 from datetime import datetime, time
 from random import randint
 
 import keyboard
+
+
+class bcolors:
+    HEADER = "\033[95m"
+    OKBLUE = "\033[94m"
+    OKCYAN = "\033[96m"
+    OKGREEN = "\033[92m"
+    WARNING = "\033[93m"
+    FAIL = "\033[91m"
+    ENDC = "\033[0m"
+    BOLD = "\033[1m"
+    UNDERLINE = "\033[4m"
+    RED = "\033[1;31m"
 
 
 class Controller(object):
@@ -38,7 +52,11 @@ class View(object):
 
     def print_msg_to_stdout(self):
         now = datetime.now().strftime("%H:%M:%S")
-        print("It's {}, {}".format(now, self.text))
+        print(
+            "{} Warning: It's {}, {}{}".format(
+                bcolors.RED, now, self.text, bcolors.ENDC
+            )
+        )
 
 
 class Model(object):
@@ -77,8 +95,35 @@ class Model(object):
 
 
 if __name__ == "__main__":
-    view = View("Your mom ask you to go to bed")
-    model = Model(time(14), time(0))
+    # Instantiate the parser
+    parser = argparse.ArgumentParser(description="GTB App description")
+    parser.add_argument(
+        "-g",
+        "--go_to_bed_hour",
+        dest="go_to_bed_hour",
+        type=int,
+        help="The start time of notification in hour format, for example: 0",
+        default=0,
+    )
+    parser.add_argument(
+        "-w",
+        "--wake_up_hour",
+        dest="wake_up_hour",
+        type=int,
+        help="The start time of notification in hour format, for exampe: 7. If you press any key in 0:00:00-7:00:00, you will get a notification",
+        default=7,
+    )
+    parser.add_argument(
+        "-c",
+        "--content",
+        dest="content",
+        type=ascii,
+        help="The content of notification",
+        default="Your mom ask you to go to bed",
+    )
+    args = parser.parse_args()
+    view = View(args.content)
+    model = Model(time(args.go_to_bed_hour), time(args.wake_up_hour))
     ctrl = Controller(view=view, model=model)
     ctrl.run()
     keyboard.wait()
