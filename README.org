@@ -1,0 +1,60 @@
+#+LATEX_CLASS: ramsay-org-article
+#+LATEX_CLASS_OPTIONS: [oneside,A4paper,12pt]
+#+AUTHOR: Ramsay Leung
+#+EMAIL: ramsayleung@gmail.com
+#+DATE: 2021-08-08T17:36:53
+* Your mom ask you to go to bed
+** About The Project
+*** Motivation
+    Honestly speaking, I am not a night owl, and I don't want to be. But sometimes I am too much focus on my work or project to forget bedtime, so I want a tool to notify me when it's time to sleep. Thus, I built this tool. 
+
+    It will detect any keyboard event at the bedtime, then print a message to console every 10 seconds. You can customize the interval seconds, bedtime and notification message.
+
+    [[./doc/img/gtb.png]]
+
+    You could also use this tool to notify you to go off work.
+** Getting Started
+*** Prerequisites
+    + Python 3.6+(for the fstring feature)
+    + [[https://github.com/boppreh/keyboard][keyboard]]:
+      #+begin_src sh
+	sudo pip install keyboard
+      #+end_src
+*** Installation
+    Clone the repo:
+    #+begin_src sh
+      git clone git@github.com:ramsayleung/gtb.git
+    #+end_src
+** Usage
+   #+begin_src sh
+     cd gtb
+     sudo python main.py
+   #+end_src
+
+   Important:
+
+   **You need to run this tool with =sudo=, since the =keyboard= dependency requires sudo privilege to hook global keyboard event.**
+
+   For more options:
+   #+begin_src sh
+     > sudo python main.py -h
+
+     usage: main.py [-h] [-g GO_TO_BED_HOUR] [-w WAKE_UP_HOUR] [-i INTERVAL] [-c CONTENT]
+
+     GTB App description
+
+     optional arguments:
+       -h, --help            show this help message and exit
+       -g GO_TO_BED_HOUR, --go_to_bed_hour GO_TO_BED_HOUR
+			     The start time of notification in hour format, for example: 0
+       -w WAKE_UP_HOUR, --wake_up_hour WAKE_UP_HOUR
+			     The start time of notification in hour format, for exampe: 7. If you press any key in 0:00:00-7:00:00, you will get a notification
+       -i INTERVAL, --interval INTERVAL
+			     The interval seconds between two notification
+       -c CONTENT, --content CONTENT
+			     The content of notification, for example: "Your mom ask you to go to bed"
+   #+end_src
+*** Screenshot
+    [[./doc/img/gtb_running_screenshot.png]]
+** License
+   Distributed under the MIT License. See [[file:LICENSE][LICENSE]] for more information.
