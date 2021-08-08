@@ -133,4 +133,4 @@ dmypy.json
 .vscode
 
 *.lock
-__pycache__
+__pycache__/
