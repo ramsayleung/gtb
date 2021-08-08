@@ -17,6 +17,7 @@
 *** Prerequisites
     + Python 3.6+(for the fstring feature)
     + [[https://github.com/boppreh/keyboard][keyboard]]:
+
       #+begin_src sh
 	sudo pip install keyboard
       #+end_src
