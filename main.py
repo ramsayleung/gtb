@@ -1,5 +1,6 @@
 import argparse
 from datetime import datetime, time
+from time import sleep
 
 import keyboard
 
@@ -51,11 +52,10 @@ class View(object):
 
     def print_msg_to_stdout(self):
         now = datetime.now().strftime("%H:%M:%S")
-        print(
-            "{} Warning: It's {}, {}{}".format(
-                bcolors.RED, now, self.text, bcolors.ENDC
-            )
-        )
+        print("""{} {} \n {}""".format(bcolors.RED, now, bcolors.ENDC))
+        for char in list(self.text):
+            sleep(1 / 1000)
+            print("""{}{}{}""".format(bcolors.OKCYAN, char, bcolors.ENDC), end="")
 
 
 class Model(object):
@@ -121,7 +121,7 @@ if __name__ == "__main__":
         "-i",
         "--interval",
         dest="interval",
-        type=ascii,
+        type=int,
         help="The interval seconds between two notification",
         default=10,
     )
@@ -129,14 +129,17 @@ if __name__ == "__main__":
         "-c",
         "--content",
         dest="content",
-        type=ascii,
+        type=str,
         help='The content of notification, for example: "Your mom ask you to go to bed"',
         default="Your mom ask you to go to bed",
     )
     args = parser.parse_args()
+    print(args.content)
     view = View(args.content)
     print(f"start_time: {args.go_to_bed_hour}, end_time: {args.wake_up_hour}")
-    model = Model(time(args.go_to_bed_hour), time(args.wake_up_hour), args.interval)
+    model = Model(
+        time(args.go_to_bed_hour), time(args.wake_up_hour), int(args.interval)
+    )
     ctrl = Controller(view=view, model=model)
     ctrl.run()
     keyboard.wait()
