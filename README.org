@@ -55,7 +55,10 @@
 			     The interval seconds between two notification
        -c CONTENT, --content CONTENT
 			     The content of notification, for example: "Your mom ask you to go to bed"
+
+   var=$(cat ./ascii-art-1.txt); sudo python ~/code/python/gtb/main.py -g 23 -w 0 -c $var -i 1 # To see what happen
    #+end_src
+
 *** Screenshot
     [[./doc/img/gtb_running_screenshot.png]]
 ** License
